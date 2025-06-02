@@ -18,6 +18,7 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -46,12 +47,18 @@ class ResponseTransformerTest extends TestCase
     private $serializerProphecy;
 
     /**
+     * @var LoggerInterface|ObjectProphecy
+     */
+    private $loggerProphecy;
+
+    /**
      * {@inheritdoc}
      */
     protected function setUp(): void
     {
         $this->endpointRegistryProphecy = $this->prophesize(EndpointRegistryInterface::class);
         $this->serializerProphecy = $this->prophesize(SerializerInterface::class);
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
     public function testTransformSuccess(): void
@@ -79,7 +86,8 @@ class ResponseTransformerTest extends TestCase
 
         $responseTransformer = new ResponseTransformer(
             $this->endpointRegistryProphecy->reveal(),
-            $this->serializerProphecy->reveal()
+            $this->serializerProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
 
         $responseTransformer->transform($responseProphecy->reveal(), $serviceRequest->reveal());
@@ -106,7 +114,8 @@ class ResponseTransformerTest extends TestCase
 
         $responseTransformer = new ResponseTransformer(
             $this->endpointRegistryProphecy->reveal(),
-            $this->serializerProphecy->reveal()
+            $this->serializerProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
 
         $responseTransformer->transform($responseProphecy->reveal(), $serviceRequest->reveal());
@@ -135,7 +144,8 @@ class ResponseTransformerTest extends TestCase
 
         $responseTransformer = new ResponseTransformer(
             $this->endpointRegistryProphecy->reveal(),
-            $this->serializerProphecy->reveal()
+            $this->serializerProphecy->reveal(),
+            $this->loggerProphecy->reveal()
         );
 
         $responseTransformer->transform($response->reveal(), $serviceRequest->reveal());

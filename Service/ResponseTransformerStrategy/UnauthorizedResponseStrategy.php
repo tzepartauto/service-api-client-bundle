@@ -17,22 +17,25 @@ use Auto1\ServiceAPIClientBundle\Service\DeserializerInterface;
 use Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategyInterface;
 use Auto1\ServiceAPIComponentsBundle\Service\Endpoint\EndpointInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Response;
 
-class UnauthorizedResponseStrategy implements ResponseTransformerStrategyInterface, LoggerAwareInterface
+class UnauthorizedResponseStrategy implements ResponseTransformerStrategyInterface
 {
-    use LoggerAwareTrait;
-
     private $deserializer;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
-        DeserializerInterface $deserializer
+        DeserializerInterface $deserializer,
+        LoggerInterface $logger
     ) {
         $this->deserializer = $deserializer;
-        $this->setLogger(new NullLogger());
+        $this->logger = $logger;
     }
 
     public function supports(ResponseInterface $response): bool

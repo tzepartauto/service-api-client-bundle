@@ -36,8 +36,7 @@ class RequestTimerTest extends TestCase
             ->warning(new AnyValuesToken())
             ->shouldNotBeCalled();
 
-        $calculator = new RequestTimer();
-        $calculator->setLogger($this->logger->reveal());
+        $calculator = new RequestTimer($this->logger->reveal());
 
         $calculator->from($request = $this->createRequest());
         usleep(3 * 1000);
@@ -52,8 +51,7 @@ class RequestTimerTest extends TestCase
             ->warning(new AnyValuesToken())
             ->shouldBeCalled();
 
-        $calculator = new RequestTimer();
-        $calculator->setLogger($this->logger->reveal());
+        $calculator = new RequestTimer($this->logger->reveal());
 
         usleep(2 * 1000);
         $calculatedDuration = $calculator->to($this->createRequest());
@@ -67,8 +65,7 @@ class RequestTimerTest extends TestCase
             ->warning(new AnyValuesToken())
             ->shouldBeCalledOnce();
 
-        $calculator = new RequestTimer();
-        $calculator->setLogger($this->logger->reveal());
+        $calculator = new RequestTimer($this->logger->reveal());
 
         $calculator->from($request = $this->createRequest());
         usleep(3 * 1000);
@@ -86,8 +83,7 @@ class RequestTimerTest extends TestCase
             ->warning(new AnyValuesToken())
             ->shouldNotBeCalled();
 
-        $calculator = new RequestTimer();
-        $calculator->setLogger($this->logger->reveal());
+        $calculator = new RequestTimer($this->logger->reveal());
 
         $request1 = $this->createRequest();
         $request2 = $this->createRequest();

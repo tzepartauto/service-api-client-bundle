@@ -14,24 +14,25 @@ namespace Auto1\ServiceAPIClientBundle\Service;
 use Auto1\ServiceAPIClientBundle\DTO\ErrorResponse;
 use Auto1\ServiceAPIClientBundle\Exception\Response\MalformedResponseException;
 use Auto1\ServiceAPIComponentsBundle\Service\Endpoint\EndpointInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class SymfonyDeserializer implements LoggerAwareInterface, DeserializerInterface
+class SymfonyDeserializer implements DeserializerInterface
 {
-    use LoggerAwareTrait;
-
     private $serializer;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         SerializerInterface $serializer
     ) {
         $this->serializer = $serializer;
-        $this->setLogger(new NullLogger());
+        $this->logger = new NullLogger();
     }
 
     /**

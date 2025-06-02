@@ -31,11 +31,11 @@ class BadGatewayResponseStrategyTest extends TestCase
      */
     private $strategy;
 
+
     protected function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->strategy = new BadGatewayResponseStrategy();
-        $this->strategy->setLogger($this->logger);
+        $this->strategy = new BadGatewayResponseStrategy($this->logger);
     }
 
     public function testSupportsBadGatewayResponse(): void

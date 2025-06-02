@@ -7,6 +7,8 @@
 * For the full copyright and license information, please view the LICENSE
 * file that was distributed with this source code.
 */
+declare(strict_types=1);
+
 namespace Auto1\ServiceAPIClientBundle\Service\Response;
 
 use Auto1\ServiceAPIClientBundle\DTO\ErrorResponse;
@@ -15,9 +17,9 @@ use Auto1\ServiceAPIClientBundle\Exception\Response\NotAuthorizedException;
 use Auto1\ServiceAPIClientBundle\Exception\Response\NotFoundException;
 use Auto1\ServiceAPIClientBundle\Exception\ResponseException;
 use Auto1\ServiceAPIComponentsBundle\Service\Endpoint\EndpointRegistryInterface;
-use Auto1\ServiceAPIComponentsBundle\Service\Logger\LoggerAwareTrait;
 use Auto1\ServiceAPIRequest\ServiceRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -28,8 +30,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ResponseTransformer implements ResponseTransformerInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * @var EndpointRegistryInterface
      */
@@ -41,16 +41,23 @@ class ResponseTransformer implements ResponseTransformerInterface
     private $serializer;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * ResponseTransformer constructor.
      * @param EndpointRegistryInterface $endpointRegistry
      * @param SerializerInterface $serializer
      */
     public function __construct(
         EndpointRegistryInterface $endpointRegistry,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        LoggerInterface $logger
     ) {
         $this->endpointRegistry = $endpointRegistry;
         $this->serializer = $serializer;
+        $this->logger = $logger;
     }
 
     /**
@@ -114,7 +121,7 @@ class ResponseTransformer implements ResponseTransformerInterface
         } catch (UnexpectedValueException $e) {
             /* Deserialization failure */
             $message = sprintf('Error response %s cannot be deserialized', $response->getStatusCode());
-            $this->getLogger()->error($message, [
+            $this->logger->error($message, [
                 'responseCode' => $response->getStatusCode(),
                 'responseBody' => $responseBody,
                 'exception' => $e,

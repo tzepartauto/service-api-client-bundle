@@ -7,29 +7,29 @@
 * For the full copyright and license information, please view the LICENSE
 * file that was distributed with this source code.
 */
+declare(strict_types=1);
+
 namespace Auto1\ServiceAPIClientBundle\Service\Request;
 
 use Auto1\ServiceAPIComponentsBundle\Exception\Request\InvalidArgumentException;
 use Auto1\ServiceAPIComponentsBundle\Exception\Request\MalformedRequestException;
-use Auto1\ServiceAPIComponentsBundle\Service\Endpoint\EndpointRegistryInterface;
 use Auto1\ServiceAPIComponentsBundle\Service\Endpoint\EndpointInterface;
-use Auto1\ServiceAPIComponentsBundle\Service\Logger\LoggerAwareTrait;
+use Auto1\ServiceAPIComponentsBundle\Service\Endpoint\EndpointRegistryInterface;
+use Auto1\ServiceAPIRequest\ServiceRequestInterface;
 use Http\Message\MessageFactory;
 use Http\Message\UriFactory;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
-use Auto1\ServiceAPIRequest\ServiceRequestInterface;
 
 /**
  * Class RequestFactory.
  */
 class RequestFactory implements RequestFactoryInterface
 {
-    use LoggerAwareTrait;
-
     private const METHODS_WITHOUT_BODY = ['GET', 'HEAD', 'OPTIONS', 'TRACE'];
 
     /**
@@ -63,6 +63,11 @@ class RequestFactory implements RequestFactoryInterface
     private $strictModeEnabled;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * RequestFactory constructor.
      *
      * @param EndpointRegistryInterface       $endpointRegistry
@@ -78,6 +83,7 @@ class RequestFactory implements RequestFactoryInterface
         RequestVisitorRegistryInterface $requestVisitorRegistry,
         UriFactory $uriFactory,
         MessageFactory $messageFactory,
+        LoggerInterface $logger,
         bool $strictModeEnabled = false
     ) {
         $this->endpointRegistry = $endpointRegistry;
@@ -85,6 +91,7 @@ class RequestFactory implements RequestFactoryInterface
         $this->requestVisitorRegistry = $requestVisitorRegistry;
         $this->uriFactory = $uriFactory;
         $this->messageFactory = $messageFactory;
+        $this->logger = $logger;
         $this->strictModeEnabled = $strictModeEnabled;
     }
 
@@ -144,7 +151,7 @@ class RequestFactory implements RequestFactoryInterface
             if (!method_exists($serviceRequest, $getterMethod)) {
                 $message = 'Invalid request path argumentAlias';
                 $errorCode = Response::HTTP_BAD_REQUEST;
-                $this->getLogger()->error($message, ['argumentAlias' => $matches[1][$index]]);
+                $this->logger->error($message, ['argumentAlias' => $matches[1][$index]]);
                 throw new InvalidArgumentException($message, $errorCode);
             }
             $value = $serviceRequest->$getterMethod();
@@ -155,7 +162,7 @@ class RequestFactory implements RequestFactoryInterface
         if (!$this->validateEndpointPath($path)) {
             $message = 'Invalid request path';
             $errorCode = Response::HTTP_BAD_REQUEST;
-            $this->getLogger()->error($message, ['requestPath' => $path]);
+            $this->logger->error($message, ['requestPath' => $path]);
             throw new MalformedRequestException($message, $errorCode);
         }
 

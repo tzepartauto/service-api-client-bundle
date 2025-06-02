@@ -17,21 +17,23 @@ use Auto1\ServiceAPIClientBundle\Service\DeserializerInterface;
 use Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategyInterface;
 use Auto1\ServiceAPIComponentsBundle\Service\Endpoint\EndpointInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
+use Psr\Log\LoggerInterface;
 
-class UnexpectedResponseStrategy implements ResponseTransformerStrategyInterface, LoggerAwareInterface
+class UnexpectedResponseStrategy implements ResponseTransformerStrategyInterface
 {
-    use LoggerAwareTrait;
-
     private $deserializer;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
-        DeserializerInterface $deserializer
+        DeserializerInterface $deserializer,
+        LoggerInterface $logger
     ) {
         $this->deserializer = $deserializer;
-        $this->setLogger(new NullLogger());
+        $this->logger = $logger;
     }
 
     public function supports(ResponseInterface $response): bool

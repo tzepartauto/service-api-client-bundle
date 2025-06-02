@@ -42,8 +42,7 @@ class UnexpectedResponseStrategyTest extends TestCase
     {
         $this->deserializer = $this->createMock(DeserializerInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->strategy = new UnexpectedResponseStrategy($this->deserializer);
-        $this->strategy->setLogger($this->logger);
+        $this->strategy = new UnexpectedResponseStrategy($this->deserializer, $this->logger);
     }
 
     /**

@@ -34,8 +34,7 @@ class ServiceUnavailableResponseStrategyTest extends TestCase
     protected function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->strategy = new ServiceUnavailableResponseStrategy();
-        $this->strategy->setLogger($this->logger);
+        $this->strategy = new ServiceUnavailableResponseStrategy($this->logger);
     }
 
     public function testSupportsBadGatewayResponse(): void

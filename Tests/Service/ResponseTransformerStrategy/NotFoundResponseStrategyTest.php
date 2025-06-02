@@ -43,8 +43,7 @@ class NotFoundResponseStrategyTest extends TestCase
     {
         $this->deserializer = $this->createMock(DeserializerInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->strategy = new NotFoundResponseStrategy($this->deserializer);
-        $this->strategy->setLogger($this->logger);
+        $this->strategy = new NotFoundResponseStrategy($this->deserializer, $this->logger);
     }
 
     public function testSupportsNotFoundResponses(): void

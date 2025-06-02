@@ -34,8 +34,7 @@ class GatewayTimeoutResponseStrategyTest extends TestCase
     protected function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->strategy = new GatewayTimeoutResponseStrategy();
-        $this->strategy->setLogger($this->logger);
+        $this->strategy = new GatewayTimeoutResponseStrategy($this->logger);
     }
 
     public function testSupportsBadGatewayResponse(): void

@@ -12,24 +12,24 @@ declare(strict_types=1);
 namespace Auto1\ServiceAPIClientBundle\Service;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
+use Psr\Log\LoggerInterface;
 
-class RequestTimer implements LoggerAwareInterface
+class RequestTimer
 {
-    use LoggerAwareTrait;
-
     /**
      * @var \SplObjectStorage
      */
     private $ongoingRequests;
 
-    public function __construct()
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
     {
         $this->ongoingRequests = new \SplObjectStorage();
-
-        $this->setLogger(new NullLogger());
+        $this->logger = $logger;
     }
 
     public function from(RequestInterface $request): void

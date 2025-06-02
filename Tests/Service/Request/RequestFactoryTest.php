@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Auto1\ServiceAPIClientBundle\Service\Request\RequestVisitorRegistry;
 use Auto1\ServiceAPIClientBundle\Service\Request\RequestVisitorRegistryInterface;
@@ -68,6 +69,11 @@ class RequestFactoryTest extends TestCase
     private $messageFactoryProphecy;
 
     /**
+     * @var LoggerInterface|ObjectProphecy
+     */
+    private $loggerProphecy;
+
+    /**
      * {@inheritdoc}
      */
     protected function setUp(): void
@@ -79,6 +85,7 @@ class RequestFactoryTest extends TestCase
         $this->requestDecoratorProphecy = $this->prophesize(RequestVisitorInterface::class);
         $this->uriFactoryProphecy = $this->prophesize(UriFactory::class);
         $this->messageFactoryProphecy = $this->prophesize(MessageFactory::class);
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
     /**
@@ -159,6 +166,7 @@ class RequestFactoryTest extends TestCase
             $this->requestVisitorRegistryProphecy->reveal(),
             $this->uriFactoryProphecy->reveal(),
             $this->messageFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
             false
         );
 
@@ -258,6 +266,7 @@ class RequestFactoryTest extends TestCase
             $this->requestVisitorRegistryProphecy->reveal(),
             $this->uriFactoryProphecy->reveal(),
             $this->messageFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
             false
         );
 
@@ -300,6 +309,7 @@ class RequestFactoryTest extends TestCase
             $this->requestVisitorRegistryProphecy->reveal(),
             $this->uriFactoryProphecy->reveal(),
             $this->messageFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
             false
         );
 
@@ -399,6 +409,7 @@ class RequestFactoryTest extends TestCase
             $this->requestVisitorRegistryProphecy->reveal(),
             $this->uriFactoryProphecy->reveal(),
             $this->messageFactoryProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
             false
         );
 

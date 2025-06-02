@@ -5,6 +5,39 @@ services:
         autoconfigure: true
         resource: '../../Service/ResponseTransformerStrategy/*'
 
+    auto1.api.null_logger:
+        class: Psr\Log\NullLogger
+
+    Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\BadGatewayResponseStrategy:
+        class: Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\BadGatewayResponseStrategy
+        arguments:
+            $logger: '@auto1.api.null_logger'
+
+    Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\GatewayTimeoutResponseStrategy:
+        class: Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\GatewayTimeoutResponseStrategy
+        arguments:
+            $logger: '@auto1.api.null_logger'
+
+    Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\ServiceUnavailableResponseStrategy:
+        class: Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\ServiceUnavailableResponseStrategy
+        arguments:
+            $logger: '@auto1.api.null_logger'
+
+    Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\NotFoundResponseStrategy:
+        class: Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\ServiceUnavailableResponseStrategy
+        arguments:
+            $logger: '@auto1.api.null_logger'
+
+    Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\UnauthorizedResponseStrategy:
+        class: Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\UnauthorizedResponseStrategy
+        arguments:
+            $logger: '@auto1.api.null_logger'
+
+    Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\UnexpectedResponseStrategy:
+        class: Auto1\ServiceAPIClientBundle\Service\ResponseTransformerStrategy\UnexpectedResponseStrategy
+        arguments:
+            $logger: '@auto1.api.null_logger'
+
     auto1.api.previous_request:
         class: Symfony\Component\HttpFoundation\Request
         factory: ['@request_stack', 'getCurrentRequest']
@@ -14,8 +47,7 @@ services:
         arguments:
             - '@auto1.api.endpoint.registry'
             - '@auto1.api.response.serializer'
-        calls:
-            - [setLogger, ['@logger']]
+            - '@logger'
 
     auto1.api.response.strategy.transformer:
         class: Auto1\ServiceAPIClientBundle\Service\Response\ResponseStrategyTransformer
@@ -81,9 +113,8 @@ services:
             - '@auto1.api.request.visitor.registry'
             - '@auto1.api.uri_factory'
             - '@auto1.api.message_factory'
+            - '@logger'
             - '%auto1_service_api_client.strict_mode%'
-        calls:
-            - [setLogger, ['@logger']]
 
     auto1.api.client_logger.psr:
         class: Auto1\ServiceAPIClientBundle\Service\ClientLogger\PsrClientLogger
@@ -95,8 +126,8 @@ services:
 
     auto1.api.request_timer:
         class: Auto1\ServiceAPIClientBundle\Service\RequestTimer
-        calls:
-            - [ setLogger, [ '@logger' ] ]
+        arguments:
+            $logger: '@auto1.api.null_logger'
 
     auto1.api.client_logger.registry:
         class: Auto1\ServiceAPIClientBundle\Service\ClientLoggerRegistry
